@@ -1,0 +1,5 @@
+vcrpy
+pytest
+boto3
+click
+arrow

@@ -1,0 +1,8 @@
+fixtures/vcr_cassettes
+build/
+dist/
+venv/
+.cache/
+.idea/
+*.egg-info/
+*.pyc

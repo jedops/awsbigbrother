@@ -1,7 +1,7 @@
+from datetime import timedelta
 import ConfigParser
 from credential_client import CredentialClient, CSVLoader
 import arrow
-from datetime import timedelta
 
 
 class CredentialReportRow(object):
@@ -51,7 +51,7 @@ class CredentialCheckResponse(object):
         self.__user = user
 
     def get_response(self):
-        if self.__check_passed == True:
+        if self.__check_passed:
             return None
         return "Check: {check_name} failed for user: {user}".format(check_name=self.__check_name,
                                                                     user=self.__user)

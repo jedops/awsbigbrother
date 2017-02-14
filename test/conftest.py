@@ -7,6 +7,7 @@ def scrub_string(string, replacement):
         f = open("fixtures/fake_cred_report_b64.txt", "r")
         if '<Content>' in response['body']['string']:
             response['body']['string'] = f.read()
+        f.close()
         return response
 
     return before_record_response

@@ -3,27 +3,32 @@ from credential_report import *
 
 config = CredentialReportConfig()
 
+
 def add_to_actions(ctx, param, value):
     if value:
         config.actions.append(param.name)
+
 
 def generate_excluded_users(ctx, param, value):
     if value:
         value.replace(' ', '')
         config.excluded_users.extend(value.split(','))
 
-def parse_config_from_file(ctx,param,value):
+
+def parse_config_from_file(ctx, param, value):
     if value:
         echo("Using config file: {0}".format(format_filename(value)))
         global config
         config = CredentialReportConfig()
         config.load_from_file(format_filename(value))
 
-def setup_password_max_age(ctx,param,value):
+
+def setup_password_max_age(ctx, param, value):
     if value:
         global config
         config.set_password_max_age(value)
-        add_to_actions(ctx,param,value)
+        add_to_actions(ctx, param, value)
+
 
 @command()
 @option('-c', type=Path(exists=True), callback=parse_config_from_file,
@@ -57,7 +62,7 @@ def app():
         cred_report_row = CredentialReportRow(row)
         if cred_report_row.user in config.excluded_users:
             continue
-        cred_report_action_runner = CredentialReportActionRunner(cred_report_row,config)
+        cred_report_action_runner = CredentialReportActionRunner(cred_report_row, config)
         for action in config.actions:
             response = getattr(cred_report_action_runner, action)()
             if response:
@@ -67,4 +72,4 @@ def app():
     if problems:
         echo("Found security issues during test. Please review output.")
         exit(1)
-    echo(style("No security issues found",fg='green'))
+    echo(style("No security issues found", fg='green'))

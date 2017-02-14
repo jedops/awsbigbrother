@@ -31,7 +31,7 @@ class CSVLoader(object):
         csv_file = cStringIO.StringIO()
         csv_file.write(csv_contents)
         csv_file.seek(0)
-        reader =  csv.reader(csv_file, delimiter=',')
+        reader = csv.reader(csv_file, delimiter=',')
         # We don't want the crappy title values
         reader.next()
         return reader

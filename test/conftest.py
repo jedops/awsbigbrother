@@ -8,6 +8,7 @@ def scrub_string(string, replacement):
         if '<Content>' in response['body']['string']:
             response['body']['string'] = f.read()
         return response
+
     return before_record_response
 
 
@@ -16,6 +17,6 @@ def vcr_test(request):
     my_vcr = vcr.VCR(filter_headers=['authorization'],
                      cassette_library_dir='fixtures/vcr_cassettes',
                      record_mode='once',
-                     before_record_response = scrub_string('','')
-                    )
+                     before_record_response=scrub_string('', '')
+                     )
     yield my_vcr

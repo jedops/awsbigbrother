@@ -8,7 +8,7 @@ install_requires=['click','boto3','arrow'],
 packages=find_packages(exclude=['contrib', 'docs', 'test*','venv','build','dist','.cache','fixtures']),
 entry_points={
     'console_scripts': [
-    'awscredsreport=awscredsreporter.cli:app',
+    'awscredsreport=awsbigbrother.cli:app',
     ]
 }
 

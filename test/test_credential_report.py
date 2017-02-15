@@ -1,4 +1,4 @@
-from awscredsreporter.credential_report import *
+from awsbigbrother.credential_report import *
 import pytest
 
 

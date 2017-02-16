@@ -4,9 +4,10 @@ import vcr
 
 def scrub_string(string, replacement):
     def before_record_response(response):
-        f = open("fixtures/fake_cred_report_b64.txt", "r")
         if '<Content>' in response['body']['string']:
+            f = open("fixtures/fake_cred_report_b64.txt", "r")
             response['body']['string'] = f.read()
+            f.close
         return response
 
     return before_record_response

@@ -29,6 +29,13 @@ def setup_password_max_age(ctx, param, value):
         config.set_password_max_age(value)
         add_to_actions(ctx, param, value)
 
+def access_key_max_age(ctx, param, value):
+    if value:
+        echo("Using config file: {0}".format(format_filename(value)))
+        global config
+        config = CredentialReportConfig
+
+
 
 @command()
 @option('-c', type=Path(exists=True), callback=parse_config_from_file,
@@ -36,6 +43,7 @@ def setup_password_max_age(ctx, param, value):
 @option('--mfa', is_flag=True, callback=add_to_actions,
         expose_value=False, default=False, help='Check whether each user has Multi-factor auth setup')
 @option('-e', callback=generate_excluded_users, expose_value=False, help='Users to exclude from the reporting')
+#@option('--access_key_max_age', callback=access_key_max_age,
 @option('--password_max_age', callback=setup_password_max_age,
         expose_value=False, type=int,
         help='The maximum age of a password in days. If the password has not been changed '

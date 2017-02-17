@@ -51,7 +51,6 @@ class TestCredentialReportActionRunner:
             config = CredentialReportConfig()
             config.load_from_file('fixtures/audit.conf')
             return CredentialReportActionRunner(cred_report_row, config)
-
         return get_action_runner
 
     def test_password_max_age(self, action_runner):
@@ -62,12 +61,6 @@ class TestCredentialReportActionRunner:
         action_runner = action_runner('2019')
         assert not action_runner.password_max_age()
 
-    def test_access_key_max_age(self):
-        row = 'fakeuser6,arn:aws:iam::123456789123:user/fakeuser6,2015-12-15T12:43:05+00:00,' \
-              'false,N/A,N/A,N/A,false,true,2015-12-15T12:55:15+00:00,2015-12-15T15:14:00+00:00,' \
-              'eu-west-1,ec2,true,2015-12-15T12:55:15+00:00,2015-12-15T15:14:00+00:00,' \
-              'eu-west-1,ec2,false,N/A,false,N/A'
-        row_array = row.split(',')
-        cred_report_row = CredentialReportRow(row_array)
-        config = CredentialReportConfig()
-        config.load_from_file('fixtures/audit.conf')
+    def test_access_key_max_age(self,action_runner):
+        action_runner = action_runner('2016')
+

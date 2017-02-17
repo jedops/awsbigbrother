@@ -23,4 +23,4 @@ class TestCSVLoader:
             csv_loader = CSVLoader()
             reader = csv_loader.get_reader(report_csv)
             for row in reader:
-                assert type(row[0]) is str
+                assert isinstance(row[0],str)

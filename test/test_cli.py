@@ -1,7 +1,5 @@
-import click
 from click.testing import CliRunner
 from awsbigbrother.cli import *
-from click import option
 import pytest
 
 

@@ -1,5 +1,5 @@
 import ConfigParser
-from credential_client import CredentialClient, CSVLoader
+from credential_client import CredentialClient
 import arrow
 from datetime import timedelta
 

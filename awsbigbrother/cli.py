@@ -25,7 +25,6 @@ def parse_config_from_file(ctx, param, value):
 
 def setup_password_max_age(ctx, param, value):
     if value:
-        global config
         config.set_password_max_age(value)
         add_to_actions(ctx, param, value)
 

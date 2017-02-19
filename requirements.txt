@@ -3,3 +3,5 @@ pytest
 boto3
 click
 arrow
+configparser
+

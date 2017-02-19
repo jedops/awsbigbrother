@@ -43,22 +43,23 @@ class CredentialReportActionRunner(object):
             return CredentialCheckResponse('password_max_age', self._is_expired(
                 self.__row.password_last_changed,
                 self.__config.password_max_age
-            ),  self.__row.user).get_response()
+            ), self.__row.user).get_response()
         return None
 
-    def access_key_max_age(self):
+    # Make this more generic!
+    def access_keys_max_age(self):
         if self.__row.access_key_1_active == 'true':
-            problems = False
-            first_check = CredentialCheckResponse('access_key_max_age', self._is_expired(
-                self.__row.password_last_changed,
-                self.__config.password_max_age
-            ), self.__row.user).get_response()
-
+            access_key_1_expired = self._is_expired(self.__row.access_key_1_last_rotated, self.__config.access_keys_max_age)
+            first_check = CredentialCheckResponse('access_keys_max_age', access_key_1_expired,
+                                                  self.__row.user).get_response()
+            if first_check:
+                return first_check
             if self.__row.access_key_2_active == 'true':
-                CredentialCheckResponse('password_max_age', self._is_expired(
-                    self.__row.password_last_changed,
-                    self.__config.password_max_age
-                ), self.__row.user).get_response()
+                access_key_2_expired = self._is_expired(self.__row.access_key_1_last_rotated, self.__config.access_keys_max_age)
+                second_check = CredentialCheckResponse('access_keys_max_age', access_key_2_expired ,
+                                                       self.__row.user).get_response()
+                return second_check
+        return None
 
     def _is_expired(self, timestamp, max_age):
         current_time = arrow.utcnow()
@@ -81,11 +82,14 @@ class CredentialCheckResponse(object):
 
 
 class CredentialReportConfig(object):
+    noout = False
+
     def __init__(self):
         self.actions = []
         self.timeout = 60
         self.excluded_users = []
         self.password_max_age = timedelta(days=99999999)
+        self.access_keys_max_age = timedelta(days=99999999)
 
     def load_from_file(self, path):
         config = ConfigParser.RawConfigParser()
@@ -94,8 +98,13 @@ class CredentialReportConfig(object):
         self.timeout = int(config.get('global', 'timeout'))
         if config.get('global', 'mfa') == 'true':
             self.actions.append('mfa')
+        # Not setting actions here :( We should be.
         self.excluded_users = config.get('global', 'excluded_users').replace(' ', '').split(',')
         self.password_max_age = timedelta(days=int(config.get('passwords', 'max_age_days')))
+        self.access_keys_max_age = timedelta(days=int(config.get('access_keys', 'max_age_days')))
 
     def set_password_max_age(self, age):
         self.password_max_age = timedelta(days=age)
+
+    def set_access_keys_max_age(self, age):
+        self.access_keys_max_age = timedelta(days=age)

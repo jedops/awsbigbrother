@@ -1,5 +1,6 @@
 from click import echo, command, option, style, format_filename, Path
 from credential_report import *
+from credential_client import CSVLoader
 
 config = CredentialReportConfig()
 
@@ -19,7 +20,6 @@ def parse_config_from_file(ctx, param, value):
     if value:
         echo("Using config file: {0}".format(format_filename(value)))
         global config
-        config = CredentialReportConfig()
         config.load_from_file(format_filename(value))
 
 
@@ -28,11 +28,15 @@ def setup_password_max_age(ctx, param, value):
         config.set_password_max_age(value)
         add_to_actions(ctx, param, value)
 
-def access_key_max_age(ctx, param, value):
+def access_keys_max_age(ctx, param, value):
     if value:
-        echo("Using config file: {0}".format(format_filename(value)))
-        global config
-        config = CredentialReportConfig
+        config.set_access_keys_max_age(value)
+        add_to_actions(ctx,param,value)
+
+def noout_warning(ctx,param,value):
+    if value:
+        echo("noout specified - not printing check results to screen")
+        config.noout = True
 
 
 
@@ -42,12 +46,15 @@ def access_key_max_age(ctx, param, value):
 @option('--mfa', is_flag=True, callback=add_to_actions,
         expose_value=False, default=False, help='Check whether each user has Multi-factor auth setup')
 @option('-e', callback=generate_excluded_users, expose_value=False, help='Users to exclude from the reporting')
-#@option('--access_key_max_age', callback=access_key_max_age,
+@option('--access_keys_max_age', callback=access_keys_max_age,
+        expose_value=False, type=int, help="The maximum age of any access keys the user has configured")
 @option('--password_max_age', callback=setup_password_max_age,
         expose_value=False, type=int,
         help='The maximum age of a password in days. If the password has not been changed '
              'in this amount of days the command will report an issue')
-def app():
+@option('--noout', is_flag=True, callback=noout_warning, expose_value=True,
+        help="Don't print out the check results to the console (e.g. if you run this on a public service)")
+def app(noout):
     """AWS Credentials reporter.
        This command checks your AWS account users for security issues.
        Options can either be specified as command line arguments or in a configuration file. The order of precedence is as follows:
@@ -73,10 +80,16 @@ def app():
         for action in config.actions:
             response = getattr(cred_report_action_runner, action)()
             if response:
-                echo(style(response, fg='red'))
+                output(noout,response, fg='red')
                 problems = True
 
     if problems:
         echo("Found security issues during test. Please review output.")
         exit(1)
-    echo(style("No security issues found", fg='green'))
+    output(noout,"No security issues found", fg='green')
+
+
+def output (noout, text, fg=None):
+    if not config.noout:
+        echo (style(text,fg=fg))
+

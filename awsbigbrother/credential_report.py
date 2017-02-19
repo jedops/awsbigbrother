@@ -108,3 +108,6 @@ class CredentialReportConfig(object):
 
     def set_access_keys_max_age(self, age):
         self.access_keys_max_age = timedelta(days=age)
+
+    def clear(self):
+        del self.actions[:]

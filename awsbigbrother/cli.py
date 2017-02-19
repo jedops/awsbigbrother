@@ -85,8 +85,11 @@ def app(noout):
 
     if problems:
         echo("Found security issues during test. Please review output.")
+        # A bit sucky, but needed for the cli tests until I find a smarter way of doing things/refactor :(
+        config.clear()
         exit(1)
     output(noout,"No security issues found", fg='green')
+    config.clear()
 
 
 def output (noout, text, fg=None):

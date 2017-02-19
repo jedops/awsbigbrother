@@ -1,6 +1,6 @@
 from click.testing import CliRunner
-from awsbigbrother.cli import *
 import pytest
+from awsbigbrother.cli import app
 
 class TestCli(object):
 

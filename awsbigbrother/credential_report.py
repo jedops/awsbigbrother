@@ -1,5 +1,5 @@
-import ConfigParser
-from credential_client import CredentialClient
+import configparser
+from .credential_client import CredentialClient
 import arrow
 from datetime import timedelta
 
@@ -92,7 +92,7 @@ class CredentialReportConfig(object):
         self.access_keys_max_age = timedelta(days=99999999)
 
     def load_from_file(self, path):
-        config = ConfigParser.RawConfigParser()
+        config = configparser.RawConfigParser()
         config.read(path)
         # Need to rescue here in case not defined
         self.timeout = int(config.get('global', 'timeout'))

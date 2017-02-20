@@ -1,7 +1,12 @@
 import time
-import cStringIO
 import csv
 import boto3
+import sys
+
+if sys.version_info[0] < 3:
+    import cStringIO
+else:
+    import io
 
 
 class CredentialClient(object):
@@ -28,10 +33,16 @@ class CredentialClient(object):
 class CSVLoader(object):
     @staticmethod
     def get_reader(csv_contents):
-        csv_file = cStringIO.StringIO()
-        csv_file.write(csv_contents)
+        if sys.version_info[0] >= 3:
+            print ("using python version 3")
+            csv_file = io.StringIO()
+            csv_file.write(csv_contents.decode("utf-8"))
+        else:
+            print ("using python version 2")
+            csv_file = cStringIO.StringIO()
+            csv_file.write(csv_contents)
         csv_file.seek(0)
         reader = csv.reader(csv_file, delimiter=',')
         # We don't want the crappy title values
-        reader.next()
+        next(reader)
         return reader

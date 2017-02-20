@@ -1,6 +1,6 @@
 from click import echo, command, option, style, format_filename, Path
-from credential_report import *
-from credential_client import CSVLoader
+from .credential_report import *
+from .credential_client import CSVLoader
 
 config = CredentialReportConfig()
 

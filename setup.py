@@ -5,7 +5,7 @@ version='0.0.1',
 description='A tool to audit your AWS credentials',
 license='MIT',
 long_description="A command line app which allows you to check users comliance with various security policies",
-install_requires=['click','boto3','arrow','configparser'],
+install_requires=['click','boto3','arrow','configparser','six','future'],
 packages=find_packages(exclude=['contrib', 'docs', 'test*','venv*','build','dist','.cache','fixtures','.cache']),
 entry_points={
     'console_scripts': [

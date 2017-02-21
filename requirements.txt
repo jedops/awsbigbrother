@@ -4,4 +4,4 @@ boto3
 click
 arrow
 configparser
-
+future

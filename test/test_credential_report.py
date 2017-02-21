@@ -1,8 +1,15 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 from awsbigbrother.credential_report import *
 import pytest
 
 
-class TestCredentialReportRow:
+class TestCredentialReportRow(object):
     mfa_string = 'fakeuser6,arn:aws:iam::123456789123:user/fakeuser6,2015-12-15T12:43:05+00:00,' \
                  'false,N/A,N/A,N/A,{0},true,2015-12-15T12:55:15+00:00,2015-12-15T15:14:00+00:00,' \
                  'eu-west-1,ec2,true,2015-12-15T12:55:15+00:00,2015-12-15T15:14:00+00:00,' \
@@ -17,13 +24,13 @@ class TestCredentialReportRow:
         assert cred_row.mfa() == expected
 
 
-class TestCheckResponse:
+class TestCheckResponse(object):
     def test_check_get_response(self):
         cred_check_response = CredentialCheckResponse('sausage', False, 'bob').get_response()
         assert cred_check_response == "Check: sausage failed for user: bob"
 
 
-class TestCredentialReportConfig:
+class TestCredentialReportConfig(object):
     @pytest.fixture
     def cred_report_config(self):
         cred_report_config = CredentialReportConfig()
@@ -36,7 +43,7 @@ class TestCredentialReportConfig:
         assert cred_report_config.excluded_users == ['iamamoron', 'helpme']
 
 
-class TestCredentialReportActionRunner:
+class TestCredentialReportActionRunner(object):
     row = "fakeuser6,arn:aws:iam::123456789123:user/fakeuser6,{0}-12-15T12:43:05+00:00," \
           "false,{0}-12-15T12:55:15+00:00,{0}-12-15T12:55:15+00:00,N/A,false," \
           "true,{0}-12-15T12:55:15+00:00,{0}-12-15T15:14:00+00:00," \

@@ -1,3 +1,9 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
 from click.testing import CliRunner
 import pytest
 from awsbigbrother.cli import app
@@ -13,6 +19,7 @@ class TestCli(object):
 
     def test_mfa(self,vcr_test,my_runner):
         with vcr_test.use_cassette('mfa_cli_test.yml'):
+
             result = my_runner.invoke(app, ['--mfa'])
             assert "mfa failed for user" in result.output
 

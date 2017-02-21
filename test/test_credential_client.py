@@ -1,13 +1,25 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 from awsbigbrother.credential_client import *
-import pytest
 
+PY3 = (sys.version_info[0] >= 3)
 
-class TestCredentialClient:
+class TestCredentialClient(object):
     def test_get_csv(self, vcr_test):
         with vcr_test.use_cassette('test_get_csv.yml'):
             credential_client = CredentialClient()
             report = credential_client.get_csv()
-            assert 0 == report.find("user,arn,user_creation_time,", 0, 28)
+            if PY3:
+                decoded_report = report.decode('utf-8')
+                result = decoded_report.find("user,arn,user_creation_time,", 0, 28)
+            else:
+                result = report.find("user,arn,user_creation_time,", 0, 28)
+            assert result == 0
 
     def test_poll_until_credential_report(self, vcr_test):
         with vcr_test.use_cassette('test_poll_until_credential_report.yml'):
@@ -15,7 +27,7 @@ class TestCredentialClient:
             assert credential_client.poll_until_credential_report() == True
 
 
-class TestCSVLoader:
+class TestCSVLoader(object):
     def test_get_reader(self, vcr_test):
         with vcr_test.use_cassette('test_get_reader.yml'):
             credential_client = CredentialClient()

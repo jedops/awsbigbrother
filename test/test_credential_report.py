@@ -11,7 +11,7 @@ import pytest
 
 class TestCredentialReportRow(object):
     mfa_string = 'fakeuser6,arn:aws:iam::123456789123:user/fakeuser6,2015-12-15T12:43:05+00:00,' \
-                 'false,N/A,N/A,N/A,{0},true,2015-12-15T12:55:15+00:00,2015-12-15T15:14:00+00:00,' \
+                 'true,N/A,N/A,N/A,{0},true,2015-12-15T12:55:15+00:00,2015-12-15T15:14:00+00:00,' \
                  'eu-west-1,ec2,true,2015-12-15T12:55:15+00:00,2015-12-15T15:14:00+00:00,' \
                  'eu-west-1,ec2,false,N/A,false,N/A'
 
@@ -44,8 +44,10 @@ class TestCredentialReportConfig(object):
 
 
 class TestCredentialReportActionRunner(object):
+
+    # Need to get better test data!
     row = "fakeuser6,arn:aws:iam::123456789123:user/fakeuser6,{0}-12-15T12:43:05+00:00," \
-          "false,{0}-12-15T12:55:15+00:00,{0}-12-15T12:55:15+00:00,N/A,false," \
+          "true,{0}-12-15T12:55:15+00:00,{0}-12-15T12:55:15+00:00,N/A,false," \
           "true,{0}-12-15T12:55:15+00:00,{0}-12-15T15:14:00+00:00," \
           "eu-west-1,ec2,true,{0}-12-15T12:55:15+00:00,{0}-12-15T15:14:00+00:00," \
           "eu-west-1,ec2,false,N/A,false,N/A"
@@ -62,7 +64,7 @@ class TestCredentialReportActionRunner(object):
 
     def test_password_max_age(self, action_runner):
         action_runner = action_runner('2016')
-        assert action_runner.password_max_age() == 'Check: password_max_age failed for user: fakeuser6'
+        assert 'Check: password_max_age failed for user: fakeuser6' in action_runner.password_max_age()
 
     def test_password_max_age_in_range(self, action_runner):
         action_runner = action_runner('2019')

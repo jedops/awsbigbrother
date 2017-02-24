@@ -26,19 +26,15 @@ def parse_config_from_file(ctx, param, value):
 def setup_password_max_age(ctx, param, value):
     if value:
         config.set_password_max_age(value)
-        add_to_actions(ctx, param, value)
 
 def access_keys_max_age(ctx, param, value):
     if value:
         config.set_access_keys_max_age(value)
-        add_to_actions(ctx,param,value)
 
 def noout_warning(ctx,param,value):
     if value:
         echo("noout specified - not printing check results to screen")
         config.noout = True
-
-
 
 @command()
 @option('-c', type=Path(exists=True), callback=parse_config_from_file,

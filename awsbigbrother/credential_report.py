@@ -40,13 +40,6 @@ class CredentialReportActionRunner(object):
         return CredentialCheckResponse('mfa', self.__row.mfa_active == 'true', self.__row.user).get_response()
 
     def password_max_age(self):
-#        if self.__row.password_last_rotated != 'N/A':
-#            return CredentialCheckResponse('password_max_age', self._is_older_than_days(
-#                self.__row.password_last_rotated,
-#                self.__config.password_max_age
-#            ), self.__row.user).get_response()
-#        return None
-
         password_older_than_max_age = self._no_activity_max_age(self.__config.password_max_age,['password'])
         return CredentialCheckResponse('password_max_age', not password_older_than_max_age,self.__row.user).get_response()
 

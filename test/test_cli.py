@@ -40,7 +40,7 @@ class TestCli(object):
 
     def test_password_max_age(self,vcr_test, my_runner):
         with vcr_test.use_cassette('password_max_age_check.yml'):
-            result = my_runner.invoke(app, ['--password_max_age', '30'])
+            result = my_runner.invoke(app, ['--password_max_age', 30])
             assert "password_max_age failed for user" in result.output
 
     def test_password_max_age_not_mfa(self,vcr_test, my_runner):
@@ -52,7 +52,7 @@ class TestCli(object):
     def test_access_keys_max_age(self,vcr_test, my_runner):
         with vcr_test.use_cassette('access_keys_max_age.yml'):
             result = my_runner.invoke(app, ['--access_keys_max_age','30'])
-            assert "access_keys_max_age failed for user: fakeuser1" in result.output
+            assert "access_key_max_age failed for user: fakeuser1" in result.output
 
     def test_only_valid_options(self,vcr_test,my_runner):
         with vcr_test.use_cassette('access_keys_max_age.yml'):

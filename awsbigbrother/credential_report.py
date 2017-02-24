@@ -7,25 +7,26 @@ from datetime import timedelta
 class CredentialReportRow(object):
     user = "unknown"
     arn = "unknown"
-    password_enabled = "unknown"
+    password_active = "unknown"
     password_last_used = "unknown"
-    password_last_changed = "unknown"
+    password_last_rotated = "unknown"
     password_next_rotation = "unknown"
     mfa_active = "unknown"
 
     def __init__(self, row):
         self.user = row[0]
         self.arn = row[1]
-        self.password_enabled = row[3]
+        self.password_active = row[3]
         self.password_last_used = row[4]
-        self.password_last_changed = row[5]
+        self.password_last_rotated = row[5]
         self.password_next_rotation = row[6]
         self.mfa_active = row[7]
         self.access_key_1_active = row[8]
         self.access_key_1_last_rotated = row[9]
+        self.access_key_1_last_used = row[10]
         self.access_key_2_active = row[13]
         self.access_key_2_last_rotated = row[14]
-
+        self.access_key_2_last_used = row[15]
     def mfa(self):
         return CredentialCheckResponse('mfa', self.mfa_active == 'true', self.user).get_response()
 
@@ -39,33 +40,35 @@ class CredentialReportActionRunner(object):
         return CredentialCheckResponse('mfa', self.__row.mfa_active == 'true', self.__row.user).get_response()
 
     def password_max_age(self):
-        if self.__row.password_last_changed != 'N/A':
-            return CredentialCheckResponse('password_max_age', self._is_expired(
-                self.__row.password_last_changed,
-                self.__config.password_max_age
-            ), self.__row.user).get_response()
-        return None
+#        if self.__row.password_last_rotated != 'N/A':
+#            return CredentialCheckResponse('password_max_age', self._is_older_than_days(
+#                self.__row.password_last_rotated,
+#                self.__config.password_max_age
+#            ), self.__row.user).get_response()
+#        return None
 
-    # Make this more generic!
+        password_older_than_max_age = self._no_activity_max_age(self.__config.password_max_age,['password'])
+        return CredentialCheckResponse('password_max_age', not password_older_than_max_age,self.__row.user).get_response()
+
     def access_keys_max_age(self):
-        if self.__row.access_key_1_active == 'true':
-            access_key_1_expired = self._is_expired(self.__row.access_key_1_last_rotated, self.__config.access_keys_max_age)
-            first_check = CredentialCheckResponse('access_keys_max_age', access_key_1_expired,
-                                                  self.__row.user).get_response()
-            if first_check:
-                return first_check
-            if self.__row.access_key_2_active == 'true':
-                access_key_2_expired = self._is_expired(self.__row.access_key_1_last_rotated, self.__config.access_keys_max_age)
-                second_check = CredentialCheckResponse('access_keys_max_age', access_key_2_expired ,
-                                                       self.__row.user).get_response()
-                return second_check
-        return None
+        check_list = ['access_key_1','access_key_2']
+        if self._no_activity_max_age(self.__config.access_keys_max_age, check_list):
+            return CredentialCheckResponse("access_key_max_age", False, self.__row.user).get_response()
 
-    def _is_expired(self, timestamp, max_age):
+    def _no_activity_max_age(self, max_age, check_list):
+        row = self.__row
+        for attribute_name in check_list:
+            row_is_active = getattr(row, "{0}_active".format(attribute_name))
+            if not (row_is_active == 'false' or row_is_active == 'N/A'):
+                timestamp = getattr(row,"{0}_last_rotated".format(attribute_name))
+                return self._is_older_than_days(timestamp,max_age)
+        return False
+
+    def _is_older_than_days(self, timestamp, max_age):
         current_time = arrow.utcnow()
         utc_timestamp = arrow.get(timestamp)
         renewal_date = utc_timestamp + max_age
-        return renewal_date > current_time
+        return renewal_date < current_time
 
 
 class CredentialCheckResponse(object):

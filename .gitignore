@@ -2,6 +2,7 @@ fixtures/vcr_cassettes
 build/
 dist/
 venv/
+venv*/
 .cache/
 .idea/
 *.egg-info/

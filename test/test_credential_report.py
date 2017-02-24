@@ -69,6 +69,13 @@ class TestCredentialReportActionRunner(object):
         assert not action_runner.password_max_age()
 
     def test_access_keys_max_age(self,action_runner):
+        action_runner_ = action_runner('2016')
+        assert 'Check: access_key_max_age failed for user: fakeuser6' in action_runner_.access_keys_max_age()
+
+    # no_activity_max_age(30,['access_key_1','access_key_2','password'])
+    def test_no_activity_max_age(self, action_runner):
         action_runner = action_runner('2016')
-        assert  action_runner.access_keys_max_age() == 'Check: access_keys_max_age failed for user: fakeuser6'
+        blah = action_runner._no_activity_max_age(timedelta(days=30),['access_key_1','access_key_2','password'])
+        assert blah
+
 

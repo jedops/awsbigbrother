@@ -22,7 +22,6 @@ def scrub_string(string, replacement):
             f.close
         if PY3:
             response['body']['string'] = response['body']['string'].encode('utf-8')
-
         return response
 
     return before_record_response

@@ -1,8 +1,8 @@
 from click import echo, command, option, style, format_filename, Path
 from .credential_report import *
-from .credential_client import CSVLoader
+from .client import CSVLoader
 
-config = CredentialReportConfig()
+config = ReportConfig()
 
 
 def add_to_actions(ctx, param, value):
@@ -49,7 +49,8 @@ def noout_warning(ctx, param, value):
 @option('-e', callback=generate_excluded_users, expose_value=False, help='Users to exclude from the reporting')
 @option('--access_keys_max_age',
         callback=access_keys_max_age,
-        expose_value=False, type=int, help="The maximum age of any access keys the user has configured")
+        expose_value=False, type=int,
+        help="The maximum age of any access keys the user has configured")
 @option('--password_max_age', callback=setup_password_max_age,
         expose_value=False, type=int,
         help='The maximum age of a password in days. If the password has not been changed '
@@ -68,19 +69,19 @@ def app(noout):
        3) Default values
     """
     problems = False
-    credential_client = CredentialClient()
+    credential_client = Client()
     report_csv = credential_client.get_csv()
     csv_loader = CSVLoader()
     reader = csv_loader.get_reader(report_csv)
     for row in reader:
         if row[0] == '<root_account>':
             continue
-        cred_report_row = CredentialReportRow(row)
-        if cred_report_row.user in config.excluded_users:
+        report_row = ReportRow(row)
+        if report_row.user in config.excluded_users:
             continue
-        cred_report_action_runner = CredentialReportActionRunner(cred_report_row, config)
+        action_runner = ActionRunner(report_row, config)
         for action in config.actions:
-            response = getattr(cred_report_action_runner, action)()
+            response = getattr(action_runner, action)()
             if response:
                 output(noout, response, fg='red')
                 problems = True

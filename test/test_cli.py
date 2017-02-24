@@ -3,10 +3,10 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import division
 from future import standard_library
-standard_library.install_aliases()
-from click.testing import CliRunner
 import pytest
 from awsbigbrother.cli import app
+from click.testing import CliRunner
+
 
 class TestCli(object):
 
@@ -47,10 +47,10 @@ class TestCli(object):
 
     def test_access_keys_max_age(self, vcr_test, my_runner):
         with vcr_test.use_cassette('access_keys_max_age.yml'):
-            result = my_runner.invoke(app, ['--access_keys_max_age','30'])
+            result = my_runner.invoke(app, ['--access_keys_max_age', '30'])
             assert "access_key_max_age failed for user: fakeuser1" in result.output
 
     def test_only_valid_options(self, vcr_test, my_runner):
         with vcr_test.use_cassette('access_keys_max_age.yml'):
-            result = my_runner.invoke(app, ['--access_keys_max_age','30'])
+            result = my_runner.invoke(app, ['--access_keys_max_age', '30'])
             assert "mfa failed" not in result.output

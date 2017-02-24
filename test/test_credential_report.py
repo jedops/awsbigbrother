@@ -9,6 +9,7 @@ from awsbigbrother.credential_report import *
 import pytest
 
 
+
 class TestCredentialReportRow(object):
     mfa_string = 'fakeuser6,arn:aws:iam::123456789123:user/fakeuser6,2015-12-15T12:43:05+00:00,' \
                  'true,N/A,N/A,N/A,{0},true,2015-12-15T12:55:15+00:00,2015-12-15T15:14:00+00:00,' \
@@ -20,20 +21,20 @@ class TestCredentialReportRow(object):
         (mfa_string.format('false'), 'Check: mfa failed for user: fakeuser6'),
     ])
     def test_mfa_active(self, input, expected):
-        cred_row = CredentialReportRow(input.split(','))
+        cred_row = ReportRow(input.split(','))
         assert cred_row.mfa() == expected
 
 
 class TestCheckResponse(object):
     def test_check_get_response(self):
-        cred_check_response = CredentialCheckResponse('sausage', False, 'bob').get_response()
+        cred_check_response = CheckResponse('sausage', False, 'bob').get_response()
         assert cred_check_response == "Check: sausage failed for user: bob"
 
 
 class TestCredentialReportConfig(object):
     @pytest.fixture
     def cred_report_config(self):
-        cred_report_config = CredentialReportConfig()
+        cred_report_config = ReportConfig()
         cred_report_config.load_from_file('fixtures/audit.conf')
         return cred_report_config
 
@@ -56,10 +57,10 @@ class TestCredentialReportActionRunner(object):
     def action_runner(self, request):
         def get_action_runner(year):
             row_array = self.row.format(year).split(',')
-            cred_report_row = CredentialReportRow(row_array)
-            config = CredentialReportConfig()
+            cred_report_row = ReportRow(row_array)
+            config = ReportConfig()
             config.load_from_file('fixtures/audit.conf')
-            return CredentialReportActionRunner(cred_report_row, config)
+            return ActionRunner(cred_report_row, config)
         return get_action_runner
 
     def test_password_max_age(self, action_runner):

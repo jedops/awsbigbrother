@@ -9,7 +9,7 @@ except ImportError:
     import io
 
 
-class CredentialClient(object):
+class Client(object):
     def __init__(self, creds_report_timeout=60):
         self.client = boto3.client('iam')
         self.creds_report_timeout = creds_report_timeout

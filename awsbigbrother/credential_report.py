@@ -1,10 +1,10 @@
 import configparser
-from .credential_client import CredentialClient
 import arrow
 from datetime import timedelta
+from .client import Client
 
 
-class CredentialReportRow(object):
+class ReportRow(object):
     user = "unknown"
     arn = "unknown"
     password_active = "unknown"
@@ -27,27 +27,28 @@ class CredentialReportRow(object):
         self.access_key_2_active = row[13]
         self.access_key_2_last_rotated = row[14]
         self.access_key_2_last_used = row[15]
+
     def mfa(self):
-        return CredentialCheckResponse('mfa', self.mfa_active == 'true', self.user).get_response()
+        return CheckResponse('mfa', self.mfa_active == 'true', self.user).get_response()
 
 
-class CredentialReportActionRunner(object):
+class ActionRunner(object):
     def __init__(self, row, config):
         self.row = row
         self.config = config
 
     def mfa(self):
-        return CredentialCheckResponse('mfa', self.row.mfa_active == 'true', self.row.user).get_response()
+        return CheckResponse('mfa', self.row.mfa_active == 'true', self.row.user).get_response()
 
     def password_max_age(self):
         password_older_than_max_age = self._no_activity_max_age(self.config.password_max_age, ['password'])
-        return CredentialCheckResponse('password_max_age', not password_older_than_max_age,
-                                       self.row.user).get_response()
+        return CheckResponse('password_max_age', not password_older_than_max_age,
+                             self.row.user).get_response()
 
     def access_keys_max_age(self):
         check_list = ['access_key_1', 'access_key_2']
         if self._no_activity_max_age(self.config.access_keys_max_age, check_list):
-            return CredentialCheckResponse("access_key_max_age", False, self.row.user).get_response()
+            return CheckResponse("access_key_max_age", False, self.row.user).get_response()
 
     def _no_activity_max_age(self, max_age, check_list):
         row = self.row
@@ -65,7 +66,7 @@ class CredentialReportActionRunner(object):
         return renewal_date < current_time
 
 
-class CredentialCheckResponse(object):
+class CheckResponse(object):
     def __init__(self, check_name, check_passed, user):
         self.check_name = check_name
         self.check_passed = check_passed
@@ -78,7 +79,7 @@ class CredentialCheckResponse(object):
                                                                     user=self.user)
 
 
-class CredentialReportConfig(object):
+class ReportConfig(object):
     noout = False
 
     def __init__(self):

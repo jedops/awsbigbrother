@@ -33,28 +33,29 @@ class CredentialReportRow(object):
 
 class CredentialReportActionRunner(object):
     def __init__(self, row, config):
-        self.__row = row
-        self.__config = config
+        self.row = row
+        self.config = config
 
     def mfa(self):
-        return CredentialCheckResponse('mfa', self.__row.mfa_active == 'true', self.__row.user).get_response()
+        return CredentialCheckResponse('mfa', self.row.mfa_active == 'true', self.row.user).get_response()
 
     def password_max_age(self):
-        password_older_than_max_age = self._no_activity_max_age(self.__config.password_max_age,['password'])
-        return CredentialCheckResponse('password_max_age', not password_older_than_max_age,self.__row.user).get_response()
+        password_older_than_max_age = self._no_activity_max_age(self.config.password_max_age, ['password'])
+        return CredentialCheckResponse('password_max_age', not password_older_than_max_age,
+                                       self.row.user).get_response()
 
     def access_keys_max_age(self):
-        check_list = ['access_key_1','access_key_2']
-        if self._no_activity_max_age(self.__config.access_keys_max_age, check_list):
-            return CredentialCheckResponse("access_key_max_age", False, self.__row.user).get_response()
+        check_list = ['access_key_1', 'access_key_2']
+        if self._no_activity_max_age(self.config.access_keys_max_age, check_list):
+            return CredentialCheckResponse("access_key_max_age", False, self.row.user).get_response()
 
     def _no_activity_max_age(self, max_age, check_list):
-        row = self.__row
+        row = self.row
         for attribute_name in check_list:
             row_is_active = getattr(row, "{0}_active".format(attribute_name))
             if not (row_is_active == 'false' or row_is_active == 'N/A'):
                 timestamp = getattr(row,"{0}_last_rotated".format(attribute_name))
-                return self._is_older_than_days(timestamp,max_age)
+                return self._is_older_than_days(timestamp, max_age)
         return False
 
     def _is_older_than_days(self, timestamp, max_age):
@@ -66,15 +67,15 @@ class CredentialReportActionRunner(object):
 
 class CredentialCheckResponse(object):
     def __init__(self, check_name, check_passed, user):
-        self.__check_name = check_name
-        self.__check_passed = check_passed
-        self.__user = user
+        self.check_name = check_name
+        self.check_passed = check_passed
+        self.user = user
 
     def get_response(self):
-        if self.__check_passed == True:
+        if self.check_passed:
             return None
-        return "Check: {check_name} failed for user: {user}".format(check_name=self.__check_name,
-                                                                    user=self.__user)
+        return "Check: {check_name} failed for user: {user}".format(check_name=self.check_name,
+                                                                    user=self.user)
 
 
 class CredentialReportConfig(object):
@@ -101,7 +102,7 @@ class CredentialReportConfig(object):
         self.set_access_keys_max_age(self.int_from_config('access_keys', 'max_age_days'))
 
     def int_from_config (self, section, key):
-        value = self.config.get(section,key)
+        value = self.config.get(section, key)
         if value:
             return int(value)
         return None

@@ -27,22 +27,28 @@ def setup_password_max_age(ctx, param, value):
     if value:
         config.set_password_max_age(value)
 
+
 def access_keys_max_age(ctx, param, value):
     if value:
         config.set_access_keys_max_age(value)
 
-def noout_warning(ctx,param,value):
+
+def noout_warning(ctx, param, value):
     if value:
         echo("noout specified - not printing check results to screen")
         config.noout = True
 
+
 @command()
 @option('-c', type=Path(exists=True), callback=parse_config_from_file,
-        expose_value=False, is_eager=True, help='Path to a security check configuration file')
+        expose_value=False, is_eager=True,
+        help='Path to a security check configuration file')
 @option('--mfa', is_flag=True, callback=add_to_actions,
-        expose_value=False, default=False, help='Check whether each user has Multi-factor auth setup')
+        expose_value=False, default=False,
+        help='Check whether each user has Multi-factor auth setup')
 @option('-e', callback=generate_excluded_users, expose_value=False, help='Users to exclude from the reporting')
-@option('--access_keys_max_age', callback=access_keys_max_age,
+@option('--access_keys_max_age',
+        callback=access_keys_max_age,
         expose_value=False, type=int, help="The maximum age of any access keys the user has configured")
 @option('--password_max_age', callback=setup_password_max_age,
         expose_value=False, type=int,
@@ -76,7 +82,7 @@ def app(noout):
         for action in config.actions:
             response = getattr(cred_report_action_runner, action)()
             if response:
-                output(noout,response, fg='red')
+                output(noout, response, fg='red')
                 problems = True
 
     if problems:
@@ -84,11 +90,10 @@ def app(noout):
         # A bit sucky, but needed for the cli tests until I find a smarter way of doing things/refactor :(
         config.clear()
         exit(1)
-    output(noout,"No security issues found", fg='green')
+    output(noout, "No security issues found", fg='green')
     config.clear()
 
 
-def output (noout, text, fg=None):
+def output(noout, text, fg=None):
     if not config.noout:
-        echo (style(text,fg=fg))
-
+        echo(style(text, fg=fg))

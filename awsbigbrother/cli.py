@@ -1,5 +1,5 @@
 from click import echo, command, option, style, format_filename, Path
-from .credential_report import *
+from .report import *
 from .client import CSVLoader
 
 config = ReportConfig()

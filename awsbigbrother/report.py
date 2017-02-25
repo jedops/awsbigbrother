@@ -93,16 +93,17 @@ class ReportConfig(object):
     def load_from_file(self, path):
         self.config = configparser.RawConfigParser()
         self.config.read(path)
-        # Need to rescue here in case not defined
-        self.timeout = self.int_from_config('global', 'timeout')
+        try:
+            self.timeout = self.int_from_config('global', 'timeout')
+        except configparser.NoOptionError:
+            self.timeout = 60
         if self.config.get('global', 'mfa') == 'true':
             self.actions.append('mfa')
-        # Not setting actions here :( We should be.
         self.excluded_users = self.config.get('global', 'excluded_users').replace(' ', '').split(',')
         self.set_password_max_age(self.int_from_config('passwords', 'max_age_days'))
         self.set_access_keys_max_age(self.int_from_config('access_keys', 'max_age_days'))
 
-    def int_from_config (self, section, key):
+    def int_from_config(self, section, key):
         value = self.config.get(section, key)
         if value:
             return int(value)

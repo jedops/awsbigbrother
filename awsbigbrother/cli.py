@@ -19,7 +19,6 @@ def generate_excluded_users(ctx, param, value):
 def parse_config_from_file(ctx, param, value):
     if value:
         echo("Using config file: {0}".format(format_filename(value)))
-        global config
         config.load_from_file(format_filename(value))
 
 

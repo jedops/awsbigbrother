@@ -1,4 +1,3 @@
-from builtins import object
 from awsbigbrother.report import *
 import pytest
 

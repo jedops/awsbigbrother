@@ -5,11 +5,6 @@ from .client import CSVLoader
 config = ReportConfig()
 
 
-def add_to_actions(ctx, param, value):
-    if value:
-        config.actions.append(param.name)
-
-
 def generate_excluded_users(ctx, param, value):
     if value:
         value.replace(' ', '')
@@ -22,19 +17,14 @@ def parse_config_from_file(ctx, param, value):
         config.load_from_file(format_filename(value))
 
 
-def setup_password_max_age(ctx, param, value):
+def add_to_options(ctx, param, value):
     if value:
-        config.set_password_max_age(value)
-
-
-def access_keys_max_age(ctx, param, value):
-    if value:
-        config.set_access_keys_max_age(value)
+        setattr(config, param.name, value)
 
 
 def noout_warning(ctx, param, value):
     if value:
-        echo("noout specified - not printing check results to screen")
+        echo("noout specified - not printing check results to console")
         config.noout = True
 
 
@@ -42,15 +32,15 @@ def noout_warning(ctx, param, value):
 @option('-c', type=Path(exists=True), callback=parse_config_from_file,
         expose_value=False, is_eager=True,
         help='Path to a security check configuration file')
-@option('--mfa', is_flag=True, callback=add_to_actions,
+@option('--mfa', is_flag=True, callback=add_to_options,
         expose_value=False, default=False,
         help='Check whether each user has Multi-factor auth setup')
 @option('-e', callback=generate_excluded_users, expose_value=False, help='Users to exclude from the reporting')
 @option('--access_keys_max_age',
-        callback=access_keys_max_age,
+        callback=add_to_options,
         expose_value=False, type=int,
         help="The maximum age of any access keys the user has configured")
-@option('--password_max_age', callback=setup_password_max_age,
+@option('--password_max_age', callback=add_to_options,
         expose_value=False, type=int,
         help='The maximum age of a password in days. If the password has not been changed '
              'in this amount of days the command will report an issue')

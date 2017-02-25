@@ -11,6 +11,6 @@ python:
   - "3.7-dev"
   - "nightly"
 install: pip install tox-travis
-script: AWS_ACCESS_KEY_ID=foo AWS_SECRET_ACCESS_KEY=bar tox
+script: tox
 env:
   - AWS_ACCESS_KEY_ID=foo AWS_SECRET_ACCESS_KEY=bar

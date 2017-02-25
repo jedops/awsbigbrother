@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='awsbb',
-version='0.0.2',
+version='0.0.3',
 description='A tool to audit your AWS credentials',
 license='MIT',
 url='https://github.com/jae2/awsbigbrother',
@@ -21,11 +21,7 @@ classifiers=[
     'Intended Audience :: Information Technology',
     'Intended Audience :: System Administrators',
     'License :: OSI Approved :: MIT License',
-    'Programming Language :: Python :: 2.6',
     'Programming Language :: Python :: 2.7',
-    'Programming Language :: Python :: 3.0',
-    'Programming Language :: Python :: 3.1',
-    'Programming Language :: Python :: 3.2',
     'Programming Language :: Python :: 3.3',
     'Programming Language :: Python :: 3.4',
     'Programming Language :: Python :: 3.5',

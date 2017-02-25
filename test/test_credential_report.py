@@ -78,7 +78,7 @@ class TestReportActionRunner(object):
     # no_activity_max_age(30,['access_key_1','access_key_2','password'])
     def test_no_activity_max_age(self, action_runner):
         action_runner = action_runner('2016')
-        blah = action_runner._no_activity_max_age(timedelta(days=30),['access_key_1','access_key_2','password'])
+        blah = action_runner.no_activity_max_age(timedelta(days=30), ['access_key_1', 'access_key_2', 'password'])
         assert blah
 
 

@@ -41,26 +41,26 @@ class ActionRunner(object):
         return CheckResponse('mfa', self.row.mfa_active == 'true', self.row.user).get_response()
 
     def password_max_age(self):
-        password_older_than_max_age = self._no_activity_max_age(self.config.password_max_age, ['password'])
+        password_older_than_max_age = self.no_activity_max_age(self.config.password_max_age, ['password'])
         return CheckResponse('password_max_age', not password_older_than_max_age,
                              self.row.user).get_response()
 
     def access_keys_max_age(self):
         check_list = ['access_key_1', 'access_key_2']
-        if self._no_activity_max_age(self.config.access_keys_max_age, check_list):
+        if self.no_activity_max_age(self.config.access_keys_max_age, check_list):
             return CheckResponse("access_key_max_age", False, self.row.user).get_response()
 
-    def _no_activity_max_age(self, max_age, check_list):
+    def no_activity_max_age(self, max_age, check_list):
         row = self.row
         for attribute_name in check_list:
             row_is_active = getattr(row, "{0}_active".format(attribute_name))
             if not (row_is_active == 'false' or row_is_active == 'N/A'):
                 timestamp = getattr(row,"{0}_last_rotated".format(attribute_name))
-                return self._is_older_than_days(timestamp, max_age)
+                return self.is_older_than_days(timestamp, max_age)
         return False
 
     @staticmethod
-    def _is_older_than_days(timestamp, max_age):
+    def is_older_than_days(timestamp, max_age):
         current_time = arrow.utcnow()
         utc_timestamp = arrow.get(timestamp)
         renewal_date = utc_timestamp + max_age

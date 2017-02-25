@@ -1,4 +1,3 @@
-fixtures/vcr_cassettes
 build/
 dist/
 venv/

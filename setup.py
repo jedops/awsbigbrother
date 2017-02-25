@@ -4,9 +4,12 @@ setup(name='awsbb',
 version='0.0.1',
 description='A tool to audit your AWS credentials',
 license='MIT',
+url='https://github.com/jae2/awsbigbrother',
 long_description="A command line app which allows you to check users comliance with various security policies",
-install_requires=['click','boto3','arrow','configparser','six','future'],
+install_requires=['click','boto3','arrow','configparser','six'],
 packages=find_packages(exclude=['contrib', 'docs', 'test*','venv*','build','dist','.cache','fixtures','.cache']),
+author_email='admin@jaetech.org',
+author='James Edwards',
 entry_points={
     'console_scripts': [
     'awsbb=awsbigbrother.cli:app',

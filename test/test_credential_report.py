@@ -10,7 +10,7 @@ import pytest
 
 
 
-class TestCredentialReportRow(object):
+class TestReportRow(object):
     mfa_string = 'fakeuser6,arn:aws:iam::123456789123:user/fakeuser6,2015-12-15T12:43:05+00:00,' \
                  'true,N/A,N/A,N/A,{0},true,2015-12-15T12:55:15+00:00,2015-12-15T15:14:00+00:00,' \
                  'eu-west-1,ec2,true,2015-12-15T12:55:15+00:00,2015-12-15T15:14:00+00:00,' \
@@ -31,7 +31,7 @@ class TestCheckResponse(object):
         assert cred_check_response == "Check: sausage failed for user: bob"
 
 
-class TestCredentialReportConfig(object):
+class TestReportConfig(object):
     @pytest.fixture
     def cred_report_config(self):
         cred_report_config = ReportConfig()
@@ -44,7 +44,7 @@ class TestCredentialReportConfig(object):
         assert cred_report_config.excluded_users == ['iamamoron', 'helpme']
 
 
-class TestCredentialReportActionRunner(object):
+class TestReportActionRunner(object):
 
     # Need to get better test data!
     row = "fakeuser6,arn:aws:iam::123456789123:user/fakeuser6,{0}-12-15T12:43:05+00:00," \

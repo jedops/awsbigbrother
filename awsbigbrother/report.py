@@ -59,7 +59,8 @@ class ActionRunner(object):
                 return self._is_older_than_days(timestamp, max_age)
         return False
 
-    def _is_older_than_days(self, timestamp, max_age):
+    @staticmethod
+    def _is_older_than_days(timestamp, max_age):
         current_time = arrow.utcnow()
         utc_timestamp = arrow.get(timestamp)
         renewal_date = utc_timestamp + max_age

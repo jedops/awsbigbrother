@@ -11,7 +11,7 @@ from awsbigbrother.client import *
 PY3 = (sys.version_info[0] >= 3)
 
 
-class TestCredentialClient(object):
+class TestClient(object):
     def test_get_csv(self, vcr_test):
         with vcr_test.use_cassette('test_get_csv.yml'):
             client = Client()

@@ -24,7 +24,16 @@ At present it can be configured to error on the below and display the users who 
 
 ## Example usage
 
+
+To begin with you'll need to setup some AWS credentials. My preferred way is to have a profiles in ~/.aws/credentials and run ```AWS_PROFILE=myprofile``` before each command. You can either set up your creds via the [awscli](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) or run the following
+
+``` 
+export AWS_ACCESS_KEY_ID=myaccess_key_remember_to_keep_it_secret
+export AWS_SECRET_ACCESS_KEY=secret_key_remember_to_keep_it_secret
+
+```
 Show me all users who do not have MFA set:
+
 ``` awsbb --mfa ```
 
 Show me all users who don't have MFA set and also show me users who have not changed their password in 30 days:

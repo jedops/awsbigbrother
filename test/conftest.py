@@ -12,7 +12,6 @@ def scrub_string(string, replacement):
         if '<Content>' in response['body']['string']:
             f = open("fixtures/fake_cred_report_b64.txt", "r")
             response['body']['string'] = f.read()
-            f.close
         if PY3:
             response['body']['string'] = response['body']['string'].encode('utf-8')
         return response

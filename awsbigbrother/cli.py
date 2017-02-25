@@ -73,8 +73,6 @@ def app(noout):
     csv_loader = CSVLoader()
     reader = csv_loader.get_reader(report_csv)
     for row in reader:
-        if row[0] == '<root_account>':
-            continue
         report_row = ReportRow(row)
         if report_row.user in config.excluded_users:
             continue

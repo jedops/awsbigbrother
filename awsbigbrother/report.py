@@ -54,8 +54,8 @@ class ActionRunner(object):
         row = self.row
         for attribute_name in check_list:
             row_is_active = getattr(row, "{0}_active".format(attribute_name))
-            if not (row_is_active == 'false' or row_is_active == 'N/A'):
-                timestamp = getattr(row,"{0}_last_rotated".format(attribute_name))
+            if not (row_is_active == 'false' or row_is_active == 'N/A' or row_is_active == 'not_supported'):
+                timestamp = getattr(row, "{0}_last_rotated".format(attribute_name))
                 return self.is_older_than_days(timestamp, max_age)
         return False
 

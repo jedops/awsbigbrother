@@ -55,7 +55,7 @@ Show me all users who don't have MFA set excluding app1user and app2user:
 
 ## Using a configuration file:
 
-A sample configuration file is available [here](awsbigbrother/examples/audit.conf).
+A sample configuration file is available [here](https://raw.githubusercontent.com/jae2/awsbigbrother/master/examples/audit.conf).
 
 Note the order of precedence for options is as follows:
 

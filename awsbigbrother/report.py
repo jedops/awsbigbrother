@@ -72,13 +72,10 @@ class ActionRunner(object):
 
     def no_activity_max_age(self):
         row = self.row
-        # This is a WIP
-        # Algorithm here is completely FUBAR!
         attr_list = ['password', 'access_key_1', 'access_key_2']
         no_activity = False
         for attr in attr_list:
             if self.row_active(row, attr):
-                # If no_information we should check the user creation date.
                 attr_last_used = getattr(row, "{0}_last_used".format(attr))
                 if attr_last_used == 'no_information':
                     attr_last_used = row.user_creation_time

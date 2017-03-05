@@ -17,6 +17,7 @@ At present it can be configured to error on the below and display the users who 
 - User does not have MFA enabled.
 - User has not changed their password in N days.
 - User has not rotated their access keys in N days.
+- User has not had any activity in N days.
 
 ## Installation:
 
@@ -51,6 +52,7 @@ Show me all users who don't have MFA set and also show me users who have not rot
 Show me all users who don't have MFA set excluding app1user and app2user:
 
 ``` awsbb --mfa -e app1user,app2user ```
+
 
 
 ## Using a configuration file:

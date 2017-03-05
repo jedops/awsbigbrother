@@ -16,6 +16,7 @@ class ReportRow(object):
     def __init__(self, row):
         self.user = row[0]
         self.arn = row[1]
+        self.user_creation_time = row[2]
         self.password_active = row[3]
         self.password_last_used = row[4]
         self.password_last_rotated = row[5]
@@ -41,28 +42,62 @@ class ActionRunner(object):
         return CheckResponse('mfa', self.row.mfa_active == 'true', self.row.user).get_response()
 
     def password_max_age(self):
-        password_older_than_max_age = self.had_no_activity_since_days(self.config.password_max_age, ['password'])
+        password_older_than_max_age = self.check_no_rotation_since_days(self.config.password_max_age, ['password'])
         return CheckResponse('password_max_age', not password_older_than_max_age,
                              self.row.user).get_response()
 
     def access_keys_max_age(self):
         check_list = ['access_key_1', 'access_key_2']
-        if self.had_no_activity_since_days(self.config.access_keys_max_age, check_list):
+        if self.check_no_rotation_since_days(self.config.access_keys_max_age, check_list):
             return CheckResponse("access_key_max_age", False, self.row.user).get_response()
 
-    def had_no_activity_since_days(self, max_age, check_list):
+    def check_no_rotation_since_days(self, max_age, check_list):
         row = self.row
         for attribute_name in check_list:
-            row_is_active = getattr(row, "{0}_active".format(attribute_name))
-            if not (row_is_active == 'false' or row_is_active == 'N/A' or row_is_active == 'not_supported'):
+            # This could be refactored
+            if self.row_active(row, attribute_name):
                 timestamp = getattr(row, "{0}_last_rotated".format(attribute_name))
-                return self.is_older_than_days(timestamp, max_age)
+                if self.is_used(timestamp):
+                    return self.is_older_than_days(timestamp, max_age)
         return False
 
-    @staticmethod
-    def is_older_than_days(timestamp, max_age):
+    @classmethod
+    def row_active(cls, row, attribute_name):
+        row_is_active = getattr(row, "{0}_active".format(attribute_name))
+        return cls.is_used(row_is_active)
+
+    @classmethod
+    def is_used(cls, attribute):
+        return not (attribute == 'false' or attribute == 'N/A' or attribute == 'not_supported')
+
+    def no_activity_max_age(self):
+        row = self.row
+        # This is a WIP
+        # Algorithm here is completely FUBAR!
+        attr_list = ['password', 'access_key_1', 'access_key_2']
+        no_activity = False
+        for attr in attr_list:
+            if self.row_active(row, attr):
+                # If no_information we should check the user creation date.
+                attr_last_used = getattr(row, "{0}_last_used".format(attr))
+                if attr_last_used == 'no_information':
+                    attr_last_used = row.user_creation_time
+                max_age = self.config.no_activity_max_age
+                if self.is_older_than_days(attr_last_used, max_age):
+                    no_activity = True
+        return CheckResponse('no_activity_max_age', not no_activity,
+                             self.row.user).get_response()
+
+    @classmethod
+    def is_older_than_days(cls, timestamp, max_age):
+        if not cls.is_used(timestamp):
+            return False
         current_time = arrow.utcnow()
-        utc_timestamp = arrow.get(timestamp)
+        try:
+            utc_timestamp = arrow.get(timestamp)
+        except arrow.parser.ParserError:
+            print("failed to parse {0} as a time format. You've found a bug:".format(timestamp))
+            raise
         renewal_date = utc_timestamp + max_age
         return renewal_date < current_time
 
@@ -89,26 +124,39 @@ class ReportConfig(object):
         self.excluded_users = []
         self.__access_keys_max_age = timedelta(days=99999999)
         self.__password_max_age = timedelta(days=99999999)
+        self.__no_activity_max_age = timedelta(days=99999999)
         self.config = None
 
     def load_from_file(self, path):
-        self.config = configparser.RawConfigParser()
+
+        self.config = configparser.RawConfigParser(allow_no_value=True)
         self.config.read(path)
-        try:
-            self.timeout = self.int_from_config('global', 'timeout')
-        except configparser.NoOptionError:
-            self.timeout = 60
+        self.timeout = self.int_from_config('global', 'timeout')
         if self.config.get('global', 'mfa') == 'true':
             self.actions.append('mfa')
         self.excluded_users = self.config.get('global', 'excluded_users').replace(' ', '').split(',')
         self.password_max_age = self.int_from_config('passwords', 'max_age_days')
         self.access_keys_max_age = self.int_from_config('access_keys', 'max_age_days')
+        self.no_activity_max_age = self.int_from_config('global', 'no_activity_max_age')
 
     def int_from_config(self, section, key):
-        value = self.config.get(section, key)
+        try:
+            value = self.config.get(section, key)
+        except configparser.NoSectionError:
+            value = None
+        except configparser.NoOptionError:
+            value = None
         if value:
             return int(value)
         return None
+
+    @property
+    def access_key_1_max_age(self):
+        return self.__access_keys_max_age
+
+    @property
+    def access_key_2_max_age(self):
+        return self.__access_keys_max_age
 
     @property
     def access_keys_max_age(self):
@@ -116,8 +164,19 @@ class ReportConfig(object):
 
     @access_keys_max_age.setter
     def access_keys_max_age(self, age):
-        self.__access_keys_max_age = timedelta(days=age)
-        self.create_action('access_keys_max_age')
+        if age:
+            self.__access_keys_max_age = timedelta(days=age)
+            self.create_action('access_keys_max_age')
+
+    @property
+    def no_activity_max_age(self):
+        return self.__no_activity_max_age
+
+    @access_keys_max_age.setter
+    def no_activity_max_age(self, age):
+        if age:
+            self.__no_activity_max_age = timedelta(days=age)
+            self.create_action('no_activity_max_age')
 
     @property
     def password_max_age(self):
@@ -134,8 +193,9 @@ class ReportConfig(object):
 
     @password_max_age.setter
     def password_max_age(self, age):
-        self.__password_max_age = timedelta(days=age)
-        self.create_action('password_max_age')
+        if age:
+            self.__password_max_age = timedelta(days=age)
+            self.create_action('password_max_age')
 
     def create_action(self, action_name):
         if action_name not in self.actions:

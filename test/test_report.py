@@ -68,10 +68,37 @@ class TestReportActionRunner(object):
         action_runner_ = action_runner('2016')
         assert 'Check: access_key_max_age failed for user: fakeuser6' in action_runner_.access_keys_max_age()
 
-    # had_no_activity_since_days(30,['access_key_1','access_key_2','password'])
+    def test_row_active(self):
+        row_array = self.row.format('2016').split(',')
+        cred_report_row = ReportRow(row_array)
+        active = ActionRunner.row_active(cred_report_row, 'password')
+        assert active
+
+    def test_check_no_rotation_since_days(self, action_runner):
+        action_runner = action_runner('2016')
+        rotation_since_days = action_runner.check_no_rotation_since_days(timedelta(days=30),
+                                                          ['access_key_1', 'access_key_2', 'password'])
+        assert rotation_since_days
+
     def test_no_activity_max_age(self, action_runner):
         action_runner = action_runner('2016')
-        blah = action_runner.had_no_activity_since_days(timedelta(days=30), ['access_key_1', 'access_key_2', 'password'])
-        assert blah
+        activity_since_days = action_runner.no_activity_max_age()
+        assert activity_since_days
 
+    def test_not_no_activity_max_age(self, action_runner):
+        action_runner = action_runner('2099')
+        activity_since_days = action_runner.no_activity_max_age()
+        assert not activity_since_days
+
+class TestConfigLoader(object):
+
+    def test_config_load_missing_options(self):
+        reportconfig = ReportConfig()
+        reportconfig.load_from_file('fixtures/audit_mfa_off.conf')
+        assert isinstance(reportconfig,ReportConfig)
+
+    def test_config_load(self):
+        reportconfig = ReportConfig()
+        reportconfig.load_from_file('fixtures/audit.conf')
+        assert isinstance(reportconfig, ReportConfig)
 

@@ -44,6 +44,9 @@ def noout_warning(ctx, param, value):
         expose_value=False, type=int,
         help='The maximum age of a password in days. If the password has not been changed '
              'in this amount of days the command will report an issue')
+@option('--no_activity_max_age', callback=add_to_options,
+        expose_value=False, type=int,
+        help='The maximum number of days of user inactivity before an error is thrown')
 @option('--noout', is_flag=True, callback=noout_warning, expose_value=True,
         help="Don't print out the check results to the console (e.g. if you run this on a public service)")
 def app(noout):
@@ -51,11 +54,11 @@ def app(noout):
        This command checks your AWS account users for security issues.
        Options can either be specified as command line arguments or in a configuration file. The order of precedence is as follows:
 
-       1) Command line arguments
+       1. Command line arguments
 
-       2) Configuration files
+       2. Configuration files
 
-       3) Default values
+       3. Default values
     """
     problems = False
     credential_client = Client()

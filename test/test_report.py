@@ -90,15 +90,18 @@ class TestReportActionRunner(object):
         activity_since_days = action_runner.no_activity_max_age()
         assert not activity_since_days
 
+
 class TestConfigLoader(object):
 
     def test_config_load_missing_options(self):
         reportconfig = ReportConfig()
         reportconfig.load_from_file('fixtures/audit_mfa_off.conf')
         assert isinstance(reportconfig,ReportConfig)
+        assert reportconfig.timeout == 60
 
     def test_config_load(self):
         reportconfig = ReportConfig()
         reportconfig.load_from_file('fixtures/audit.conf')
         assert isinstance(reportconfig, ReportConfig)
+        assert reportconfig.timeout == 120
 

@@ -94,6 +94,7 @@ class ActionRunner(object):
             utc_timestamp = arrow.get(timestamp)
         except arrow.parser.ParserError:
             print("failed to parse {0} as a time format. You've found a bug:".format(timestamp))
+            print("Please report it here: https://github.com/jae2/awsbigbrother/issues".format(timestamp))
             raise
         renewal_date = utc_timestamp + max_age
         return renewal_date < current_time
@@ -128,23 +129,24 @@ class ReportConfig(object):
 
         self.config = configparser.RawConfigParser(allow_no_value=True)
         self.config.read(path)
-        self.timeout = self.int_from_config('global', 'timeout')
+        self.timeout = self.get_from_config('getint','global', 'timeout') or 60
         if self.config.get('global', 'mfa') == 'true':
             self.actions.append('mfa')
-        self.excluded_users = self.config.get('global', 'excluded_users').replace(' ', '').split(',')
-        self.password_max_age = self.int_from_config('passwords', 'max_age_days')
-        self.access_keys_max_age = self.int_from_config('access_keys', 'max_age_days')
-        self.no_activity_max_age = self.int_from_config('global', 'no_activity_max_age')
+        self.excluded_users = self.get_from_config('get', 'global', 'excluded_users').replace(' ', '').split(',') or []
+        self.password_max_age = self.get_from_config('getint', 'passwords', 'max_age_days')
+        self.access_keys_max_age = self.get_from_config('getint', 'access_keys', 'max_age_days')
+        self.no_activity_max_age = self.get_from_config('getint', 'global', 'no_activity_max_age')
 
-    def int_from_config(self, section, key):
+    def get_from_config(self, method, section, key):
         try:
-            value = self.config.get(section, key)
+            method = getattr(self.config, method)
+            value = method(section, key)
         except configparser.NoSectionError:
             value = None
         except configparser.NoOptionError:
             value = None
         if value:
-            return int(value)
+            return value
         return None
 
     @property

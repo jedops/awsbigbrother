@@ -5,15 +5,11 @@ from .client import Client
 
 
 class ReportRow(object):
-    user = "unknown"
-    arn = "unknown"
-    password_active = "unknown"
-    password_last_used = "unknown"
-    password_last_rotated = "unknown"
-    password_next_rotation = "unknown"
-    mfa_active = "unknown"
 
     def __init__(self, row):
+        # Have chosen to use index notation here instead of
+        # a,b,c = tuple because it's useful for comparing
+        # value numbers against an actual report
         self.user = row[0]
         self.arn = row[1]
         self.user_creation_time = row[2]
@@ -54,7 +50,6 @@ class ActionRunner(object):
     def check_no_rotation_since_days(self, max_age, check_list):
         row = self.row
         for attribute_name in check_list:
-            # This could be refactored
             if self.row_active(row, attribute_name):
                 timestamp = getattr(row, "{0}_last_rotated".format(attribute_name))
                 if self.is_used(timestamp):
@@ -94,7 +89,7 @@ class ActionRunner(object):
             utc_timestamp = arrow.get(timestamp)
         except arrow.parser.ParserError:
             print("failed to parse {0} as a time format. You've found a bug:".format(timestamp))
-            print("Please report it here: https://github.com/jae2/awsbigbrother/issues".format(timestamp))
+            print("Please report it here: https://github.com/jae2/awsbigbrother/issues")
             raise
         renewal_date = utc_timestamp + max_age
         return renewal_date < current_time

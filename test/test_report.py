@@ -44,7 +44,7 @@ class TestReportActionRunner(object):
           "true,{0}-12-15T12:55:15+00:00,{0}-12-15T12:55:15+00:00,N/A,false," \
           "true,{0}-12-15T12:55:15+00:00,{0}-12-15T15:14:00+00:00," \
           "eu-west-1,ec2,true,{0}-12-15T12:55:15+00:00,{0}-12-15T15:14:00+00:00," \
-          "eu-west-1,ec2,false,N/A,false,N/A"
+          "eu-west-1,ec2,true,{0}-12-15T15:14:00+00:00,true,{0}-12-15T15:14:00+00:00"
 
     @pytest.fixture()
     def action_runner(self, request):
@@ -67,6 +67,10 @@ class TestReportActionRunner(object):
     def test_access_keys_max_age(self,action_runner):
         action_runner_ = action_runner('2016')
         assert 'Check: access_key_max_age failed for user: fakeuser6' in action_runner_.access_keys_max_age()
+
+    def test_certs_max_age(self,action_runner):
+        action_runner_ = action_runner('2016')
+        assert 'Check: certs_max_age failed for user: fakeuser6' in action_runner_.certs_max_age()
 
     def test_row_active(self):
         row_array = self.row.format('2016').split(',')

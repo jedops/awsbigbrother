@@ -18,6 +18,7 @@ At present it can be configured to error on the below and display the users who 
 - User has not changed their password in N days.
 - User has not rotated their access keys in N days.
 - User has not had any activity in N days.
+- User has not rotated their certs in N days.
 
 ## Installation:
 

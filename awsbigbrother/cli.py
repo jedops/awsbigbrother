@@ -40,6 +40,10 @@ def noout_warning(ctx, param, value):
         callback=add_to_options,
         expose_value=False, type=int,
         help="The maximum age of any access keys the user has configured")
+@option('--certs_max_age',
+        callback=add_to_options,
+        expose_value=False, type=int,
+        help="The maximum age of the certs owned by a user")
 @option('--password_max_age', callback=add_to_options,
         expose_value=False, type=int,
         help='The maximum age of a password in days. If the password has not been changed '

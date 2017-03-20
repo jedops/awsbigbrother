@@ -48,6 +48,10 @@ class TestCli(object):
             result = my_runner.invoke(app, ['--access_keys_max_age', '30'])
             assert "mfa failed" not in result.output
 
+    def test_certs_max_age(self, vcr_test, my_runner):
+        with vcr_test.use_cassette('certs_max_age.yml'):
+            result = my_runner.invoke(app, ['--certs_max_age', '30'])
+            assert "certs_max_age failed for user" in result.output
 
     def test_config_load(self, vcr_test):
         with vcr_test.use_cassette('config_load_test.yml'):

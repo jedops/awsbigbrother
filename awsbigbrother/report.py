@@ -24,6 +24,10 @@ class ReportRow(object):
         self.access_key_2_active = row[13]
         self.access_key_2_last_rotated = row[14]
         self.access_key_2_last_used = row[15]
+        self.cert_1_active = row[18]
+        self.cert_1_last_rotated = row[19]
+        self.cert_2_active = row[20]
+        self.cert_2_last_rotated = row[21]
 
     def mfa(self):
         return CheckResponse('mfa', self.mfa_active == 'true', self.user).get_response()
@@ -46,6 +50,11 @@ class ActionRunner(object):
         check_list = ['access_key_1', 'access_key_2']
         if self.check_no_rotation_since_days(self.config.access_keys_max_age, check_list):
             return CheckResponse("access_key_max_age", False, self.row.user).get_response()
+
+    def certs_max_age(self):
+        check_list = ['cert_1','cert_2']
+        if self.check_no_rotation_since_days(self.config.certs_max_age, check_list):
+            return CheckResponse("certs_max_age", False, self.row.user).get_response()
 
     def check_no_rotation_since_days(self, max_age, check_list):
         row = self.row
@@ -131,6 +140,7 @@ class ReportConfig(object):
         self.password_max_age = self.get_from_config('getint', 'passwords', 'max_age_days')
         self.access_keys_max_age = self.get_from_config('getint', 'access_keys', 'max_age_days')
         self.no_activity_max_age = self.get_from_config('getint', 'global', 'no_activity_max_age')
+        self.certs_max_age = self.get_from_config('getint', 'certs', 'max_age_days')
 
     def get_from_config(self, method, section, key):
         try:
@@ -143,6 +153,24 @@ class ReportConfig(object):
         if value:
             return value
         return None
+
+    @property
+    def cert_1_max_age(self):
+        return self.__certs_max_age
+
+    @property
+    def cert_2_max_age(self):
+        return self.__certs_max_age
+
+    @property
+    def certs_max_age(self):
+        return self.__certs_max_age
+
+    @certs_max_age.setter
+    def certs_max_age(self,age):
+        if age:
+            self.__certs_max_age = timedelta(days=age)
+            self.create_action('certs_max_age')
 
     @property
     def access_key_1_max_age(self):

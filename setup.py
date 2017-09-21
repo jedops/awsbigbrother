@@ -3,7 +3,7 @@ from setuptools import find_packages
 
 
 setup(name='awsbb',
-version='0.0.4',
+version='0.0.5',
 description='A tool to audit your AWS credentials',
 license='MIT',
 url='https://github.com/jae2/awsbigbrother',

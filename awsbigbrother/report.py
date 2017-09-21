@@ -194,7 +194,7 @@ class ReportConfig(object):
     def no_activity_max_age(self):
         return self.__no_activity_max_age
 
-    @access_keys_max_age.setter
+    @no_activity_max_age.setter
     def no_activity_max_age(self, age):
         if age:
             self.__no_activity_max_age = timedelta(days=age)

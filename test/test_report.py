@@ -75,7 +75,7 @@ class TestReportActionRunner(object):
     def test_row_active(self):
         row_array = self.row.format('2016').split(',')
         cred_report_row = ReportRow(row_array)
-        active = ActionRunner.row_active(cred_report_row, 'password')
+        active = ActionRunner.attribute_active_for_row(cred_report_row, 'password')
         assert active
 
     def test_check_no_rotation_since_days(self, action_runner):

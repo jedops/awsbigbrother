@@ -17,7 +17,6 @@ class TestCli(object):
             assert isinstance(result.exception, SystemExit)
             assert "mfa failed for user" in result.output
 
-
     def test_without_mfa(self, vcr_test):
         with vcr_test.use_cassette('config_load_test.yml'):
             runner = CliRunner()

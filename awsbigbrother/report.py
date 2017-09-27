@@ -59,14 +59,14 @@ class ActionRunner(object):
     def check_no_rotation_since_days(self, max_age, check_list):
         row = self.row
         for attribute_name in check_list:
-            if self.row_active(row, attribute_name):
+            if self.attribute_active_for_row(row, attribute_name):
                 timestamp = getattr(row, "{0}_last_rotated".format(attribute_name))
                 if self.is_used(timestamp):
                     return self.is_older_than_days(timestamp, max_age)
         return False
 
     @classmethod
-    def row_active(cls, row, attribute_name):
+    def attribute_active_for_row(cls, row, attribute_name):
         row_is_active = getattr(row, "{0}_active".format(attribute_name))
         return cls.is_used(row_is_active)
 
@@ -74,20 +74,20 @@ class ActionRunner(object):
     def is_used(cls, attribute):
         return not (attribute == 'false' or attribute == 'N/A' or attribute == 'not_supported')
 
+
+
     def no_activity_max_age(self):
         row = self.row
-        attr_list = ['password', 'access_key_1', 'access_key_2']
-        no_activity = False
+        attr_list = ['password','access_key_1', 'access_key_2']
+        activity = False
         for attr in attr_list:
-            if self.row_active(row, attr):
-                attr_last_used = getattr(row, "{0}_last_used".format(attr))
-                if attr_last_used == 'no_information':
-                    attr_last_used = row.user_creation_time
-                max_age = self.config.no_activity_max_age
-                if self.is_older_than_days(attr_last_used, max_age):
-                    no_activity = True
-        return CheckResponse('no_activity_max_age', not no_activity,
-                             self.row.user).get_response()
+            if self.attribute_active_for_row(row, attr):
+                attr_last_used  = getattr(row,"{0}_last_used".format(attr))
+                if attr_last_used != 'no_information':
+                    max_age = self.config.no_activity_max_age
+                    if not self.is_older_than_days(attr_last_used, max_age):
+                        activity = True
+        return CheckResponse('no_activity_max_age', activity, self.row.user).get_response()
 
     @classmethod
     def is_older_than_days(cls, timestamp, max_age):

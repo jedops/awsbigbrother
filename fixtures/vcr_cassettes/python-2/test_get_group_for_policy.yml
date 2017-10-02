@@ -1,0 +1,52 @@
+interactions:
+- request:
+    body: !!python/unicode 'Action=ListAttachedGroupPolicies&Version=2010-05-08&GroupName=blah'
+    headers:
+      Content-Length: ['66']
+      Content-Type: [application/x-www-form-urlencoded]
+      User-Agent: [Boto3/1.4.5 Python/2.7.10 Darwin/16.7.0 Botocore/1.5.92]
+      X-Amz-Date: [20170929T173809Z]
+    method: !!python/unicode 'POST'
+    uri: https://iam.amazonaws.com/
+  response:
+    body: {string: !!python/unicode "<ListAttachedGroupPoliciesResponse xmlns=\"https://iam.amazonaws.com/doc/2010-05-08/\"\
+        >\n  <ListAttachedGroupPoliciesResult>\n    <IsTruncated>false</IsTruncated>\n\
+        \    <AttachedPolicies>\n      <member>\n        <PolicyArn>arn:aws:arn:aws:iam::jaffacakes/policy/credential_report_policy</PolicyArn>\n\
+        \        <PolicyName>credential_report_policy</PolicyName>\n      </member>\n\
+        \      <member>\n        <PolicyArn>arn:aws:iam::aws:policy/AmazonElasticTranscoderReadOnlyAccess</PolicyArn>\n\
+        \        <PolicyName>AmazonElasticTranscoderReadOnlyAccess</PolicyName>\n\
+        \      </member>\n      <member>\n        <PolicyArn>arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService</PolicyArn>\n\
+        \        <PolicyName>AWSElasticBeanstalkService</PolicyName>\n      </member>\n\
+        \      <member>\n        <PolicyArn>arn:aws:arn:aws:iam::jaffacakes/policy/policygen-201611102106</PolicyArn>\n\
+        \        <PolicyName>policygen-201611102106</PolicyName>\n      </member>\n\
+        \    </AttachedPolicies>\n  </ListAttachedGroupPoliciesResult>\n  <ResponseMetadata>\n\
+        \    <RequestId>fa589795-a53c-11e7-98e3-5590d271096c</RequestId>\n  </ResponseMetadata>\n\
+        </ListAttachedGroupPoliciesResponse>\n"}
+    headers:
+      content-length: ['1120']
+      content-type: [text/xml]
+      date: ['Fri, 29 Sep 2017 17:38:17 GMT']
+      x-amzn-requestid: [fa589795-a53c-11e7-98e3-5590d271096c]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/unicode 'Action=ListGroupPolicies&Version=2010-05-08&GroupName=blah'
+    headers:
+      Content-Length: ['58']
+      Content-Type: [application/x-www-form-urlencoded]
+      User-Agent: [Boto3/1.4.5 Python/2.7.10 Darwin/16.7.0 Botocore/1.5.92]
+      X-Amz-Date: [20170929T173817Z]
+    method: !!python/unicode 'POST'
+    uri: https://iam.amazonaws.com/
+  response:
+    body: {string: !!python/unicode "<ListGroupPoliciesResponse xmlns=\"https://iam.amazonaws.com/doc/2010-05-08/\"\
+        >\n  <ListGroupPoliciesResult>\n    <IsTruncated>false</IsTruncated>\n   \
+        \ <PolicyNames>\n      <member>iaminline</member>\n    </PolicyNames>\n  </ListGroupPoliciesResult>\n\
+        \  <ResponseMetadata>\n    <RequestId>fa74aa75-a53c-11e7-98e3-5590d271096c</RequestId>\n\
+        \  </ResponseMetadata>\n</ListGroupPoliciesResponse>\n"}
+    headers:
+      content-length: ['378']
+      content-type: [text/xml]
+      date: ['Fri, 29 Sep 2017 17:38:17 GMT']
+      x-amzn-requestid: [fa74aa75-a53c-11e7-98e3-5590d271096c]
+    status: {code: 200, message: OK}
+version: 1

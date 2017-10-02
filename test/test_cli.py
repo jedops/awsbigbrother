@@ -52,8 +52,17 @@ class TestCli(object):
             result = my_runner.invoke(app, ['--certs_max_age', '30'])
             assert "certs_max_age failed for user" in result.output
 
-    def test_config_load(self, vcr_test):
+    def test_config_load_without_policy (self, vcr_test):
         with vcr_test.use_cassette('config_load_test.yml'):
+            runner = CliRunner()
+            result = runner.invoke(app, ['-c', 'fixtures/audit_without_policy.conf'])
+            assert isinstance(result.exception, SystemExit)
+            assert "mfa failed for user" in result.output
+            assert "password_max_age failed for user" in result.output
+            assert "access_key_max_age failed for user" in result.output
+
+    def test_load_config (self, group_vcr):
+        with group_vcr.use_cassette('config_load_test2.yml'):
             runner = CliRunner()
             result = runner.invoke(app, ['-c', 'fixtures/audit.conf'])
             assert isinstance(result.exception, SystemExit)

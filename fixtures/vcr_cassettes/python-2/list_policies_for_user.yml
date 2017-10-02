@@ -1,0 +1,27 @@
+interactions:
+- request:
+    body: !!python/unicode 'UserName=awsbbuser&Version=2010-05-08&Action=ListAttachedUserPolicies'
+    headers:
+      Content-Length: ['69']
+      Content-Type: [application/x-www-form-urlencoded]
+      User-Agent: [Boto3/1.4.5 Python/2.7.10 Darwin/16.7.0 Botocore/1.5.92]
+      X-Amz-Date: [20171002T082134Z]
+    method: !!python/unicode 'POST'
+    uri: https://iam.amazonaws.com/
+  response:
+    body: {string: !!python/unicode "<ListAttachedUserPoliciesResponse xmlns=\"https://iam.amazonaws.com/doc/2010-05-08/\"\
+        >\n  <ListAttachedUserPoliciesResult>\n    <IsTruncated>false</IsTruncated>\n\
+        \    <AttachedPolicies>\n      <member>\n        <PolicyArn>arn:aws:iam::aws:policy/AdministratorAccess</PolicyArn>\n\
+        \        <PolicyName>AdministratorAccess</PolicyName>\n      </member>\n \
+        \     <member>\n        <PolicyArn>arn:aws:iam::aws:policy/IAMUserChangePassword</PolicyArn>\n\
+        \        <PolicyName>IAMUserChangePassword</PolicyName>\n      </member>\n\
+        \    </AttachedPolicies>\n  </ListAttachedUserPoliciesResult>\n  <ResponseMetadata>\n\
+        \    <RequestId>b73d5d1b-a74a-11e7-a5eb-1b355a02fa25</RequestId>\n  </ResponseMetadata>\n\
+        </ListAttachedUserPoliciesResponse>\n"}
+    headers:
+      content-length: ['705']
+      content-type: [text/xml]
+      date: ['Mon, 02 Oct 2017 08:21:39 GMT']
+      x-amzn-requestid: [b73d5d1b-a74a-11e7-a5eb-1b355a02fa25]
+    status: {code: 200, message: OK}
+version: 1

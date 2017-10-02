@@ -1,0 +1,31 @@
+interactions:
+- request:
+    body: Action=ListAttachedUserPolicies&Version=2010-05-08&UserName=awsbbuser
+    headers:
+      Content-Length: ['69']
+      Content-Type: [application/x-www-form-urlencoded]
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS40LjQgUHl0aG9uLzMuNi4wIERhcndpbi8xNi43LjAgQm90b2NvcmUvMS41LjE4
+      X-Amz-Date:
+      - !!binary |
+        MjAxNzEwMDJUMDgyMjIzWg==
+    method: POST
+    uri: https://iam.amazonaws.com/
+  response:
+    body: {string: "<ListAttachedUserPoliciesResponse xmlns=\"https://iam.amazonaws.com/doc/2010-05-08/\"\
+        >\n  <ListAttachedUserPoliciesResult>\n    <IsTruncated>false</IsTruncated>\n\
+        \    <AttachedPolicies>\n      <member>\n        <PolicyArn>arn:aws:iam::aws:policy/AdministratorAccess</PolicyArn>\n\
+        \        <PolicyName>AdministratorAccess</PolicyName>\n      </member>\n \
+        \     <member>\n        <PolicyArn>arn:aws:iam::aws:policy/IAMUserChangePassword</PolicyArn>\n\
+        \        <PolicyName>IAMUserChangePassword</PolicyName>\n      </member>\n\
+        \    </AttachedPolicies>\n  </ListAttachedUserPoliciesResult>\n  <ResponseMetadata>\n\
+        \    <RequestId>d1dc17b1-a74a-11e7-90a0-8728ca280d61</RequestId>\n  </ResponseMetadata>\n\
+        </ListAttachedUserPoliciesResponse>\n"}
+    headers:
+      Content-Length: ['705']
+      Content-Type: [text/xml]
+      Date: ['Mon, 02 Oct 2017 08:22:24 GMT']
+      x-amzn-RequestId: [d1dc17b1-a74a-11e7-90a0-8728ca280d61]
+    status: {code: 200, message: OK}
+version: 1

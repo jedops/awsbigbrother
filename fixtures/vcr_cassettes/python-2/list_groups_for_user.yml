@@ -1,0 +1,25 @@
+interactions:
+- request:
+    body: !!python/unicode 'UserName=awsbbuser&Version=2010-05-08&Action=ListGroupsForUser'
+    headers:
+      Content-Length: ['62']
+      Content-Type: [application/x-www-form-urlencoded]
+      User-Agent: [Boto3/1.4.5 Python/2.7.10 Darwin/16.7.0 Botocore/1.5.92]
+      X-Amz-Date: [20171002T082140Z]
+    method: !!python/unicode 'POST'
+    uri: https://iam.amazonaws.com/
+  response:
+    body: {string: !!python/unicode "<ListGroupsForUserResponse xmlns=\"https://iam.amazonaws.com/doc/2010-05-08/\"\
+        >\n  <ListGroupsForUserResult>\n    <IsTruncated>false</IsTruncated>\n   \
+        \ <Groups>\n      <member>\n        <Path>/</Path>\n        <GroupName>blah</GroupName>\n\
+        \        <Arn>arn:aws:iam::jaffa_cakes:group/blah</Arn>\n        <GroupId>JAFFACAKES</GroupId>\n\
+        \        <CreateDate>2017-07-04T22:13:45Z</CreateDate>\n      </member>\n\
+        \    </Groups>\n  </ListGroupsForUserResult>\n  <ResponseMetadata>\n    <RequestId>b7f84912-a74a-11e7-816d-43092c402102</RequestId>\n\
+        \  </ResponseMetadata>\n</ListGroupsForUserResponse>\n"}
+    headers:
+      content-length: ['584']
+      content-type: [text/xml]
+      date: ['Mon, 02 Oct 2017 08:21:41 GMT']
+      x-amzn-requestid: [b7f84912-a74a-11e7-816d-43092c402102]
+    status: {code: 200, message: OK}
+version: 1

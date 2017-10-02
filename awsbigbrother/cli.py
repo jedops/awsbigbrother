@@ -1,31 +1,34 @@
 from click import echo, command, option, style, format_filename, Path
 from .report import *
 from .client import CSVLoader
+from .action import *
+from .report import *
+from .config import *
 
-config = ReportConfig()
+report_config = ReportConfig()
 
 
 def generate_excluded_users(ctx, param, value):
     if value:
         value.replace(' ', '')
-        config.excluded_users.extend(value.split(','))
+        report_config.excluded_users.extend(value.split(','))
 
 
 def parse_config_from_file(ctx, param, value):
     if value:
         echo("Using config file: {0}".format(format_filename(value)))
-        config.load_from_file(format_filename(value))
+        report_config.load_from_file(format_filename(value))
 
 
 def add_to_options(ctx, param, value):
     if value:
-        setattr(config, param.name, value)
+        setattr(report_config, param.name, value)
 
 
 def noout_warning(ctx, param, value):
     if value:
         echo("noout specified - not printing check results to console")
-        config.noout = True
+        report_config.noout = True
 
 
 @command()
@@ -71,24 +74,23 @@ def app(noout):
     reader = csv_loader.get_reader(report_csv)
     for row in reader:
         report_row = ReportRow(row)
-        if report_row.user in config.excluded_users:
+        if report_row.user in report_config.excluded_users:
             continue
-        action_runner = ActionRunner(report_row, config)
-        for action in config.actions:
+        action_runner = ReportActionRunner(report_row, report_config)
+        for action in report_config.actions:
             response = getattr(action_runner, action)()
             if response:
                 output(noout, response, fg='red')
                 problems = True
-
     if problems:
         echo("Found security issues during test. Please review output.")
         # A bit sucky, but needed for the cli tests until I find a smarter way of doing things/refactor :(
-        config.clear()
+        report_config.clear()
         exit(1)
     output(noout, "No security issues found", fg='green')
-    config.clear()
+    report_config.clear()
 
 
 def output(noout, text, fg=None):
-    if not config.noout:
+    if not report_config.noout:
         echo(style(text, fg=fg))

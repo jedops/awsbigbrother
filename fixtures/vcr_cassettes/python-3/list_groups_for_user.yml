@@ -1,0 +1,29 @@
+interactions:
+- request:
+    body: Action=ListGroupsForUser&Version=2010-05-08&UserName=awsbbuser
+    headers:
+      Content-Length: ['62']
+      Content-Type: [application/x-www-form-urlencoded]
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS40LjQgUHl0aG9uLzMuNi4wIERhcndpbi8xNi43LjAgQm90b2NvcmUvMS41LjE4
+      X-Amz-Date:
+      - !!binary |
+        MjAxNzEwMDJUMDgyMjI0Wg==
+    method: POST
+    uri: https://iam.amazonaws.com/
+  response:
+    body: {string: "<ListGroupsForUserResponse xmlns=\"https://iam.amazonaws.com/doc/2010-05-08/\"\
+        >\n  <ListGroupsForUserResult>\n    <IsTruncated>false</IsTruncated>\n   \
+        \ <Groups>\n      <member>\n        <Path>/</Path>\n        <GroupName>blah</GroupName>\n\
+        \        <Arn>arn:aws:iam::jaffa_cakes:group/blah</Arn>\n        <GroupId>JAFFACAKES</GroupId>\n\
+        \        <CreateDate>2017-07-04T22:13:45Z</CreateDate>\n      </member>\n\
+        \    </Groups>\n  </ListGroupsForUserResult>\n  <ResponseMetadata>\n    <RequestId>d363f019-a74a-11e7-afb8-bbe194fb2bc8</RequestId>\n\
+        \  </ResponseMetadata>\n</ListGroupsForUserResponse>\n"}
+    headers:
+      Content-Length: ['584']
+      Content-Type: [text/xml]
+      Date: ['Mon, 02 Oct 2017 08:22:26 GMT']
+      x-amzn-RequestId: [d363f019-a74a-11e7-afb8-bbe194fb2bc8]
+    status: {code: 200, message: OK}
+version: 1

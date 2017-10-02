@@ -1,0 +1,39 @@
+interactions:
+- request:
+    body: Action=ListGroups&Version=2010-05-08
+    headers:
+      Content-Length: ['36']
+      Content-Type: [application/x-www-form-urlencoded]
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS40LjQgUHl0aG9uLzMuNi4wIERhcndpbi8xNi43LjAgQm90b2NvcmUvMS41LjE4
+      X-Amz-Date:
+      - !!binary |
+        MjAxNzA5MjlUMTczOTI2Wg==
+    method: POST
+    uri: https://iam.amazonaws.com/
+  response:
+    body: {string: "<ListGroupsResponse xmlns=\"https://iam.amazonaws.com/doc/2010-05-08/\"\
+        >\n  <ListGroupsResult>\n    <IsTruncated>false</IsTruncated>\n    <Groups>\n\
+        \      <member>\n        <Path>/</Path>\n        <GroupName>blah</GroupName>\n\
+        \        <Arn>arn:aws:iam::jaffa_cakes:group/blah</Arn>\n        <GroupId>JAFFACAKES</GroupId>\n\
+        \        <CreateDate>2017-07-04T22:13:45Z</CreateDate>\n      </member>\n\
+        \      <member>\n        <Path>/</Path>\n        <GroupName>mygroup</GroupName>\n\
+        \        <Arn>arn:aws:iam::jaffa_cakes:group/mygroup</Arn>\n        <GroupId>JAFFACAKES</GroupId>\n\
+        \        <CreateDate>2017-08-25T13:33:02Z</CreateDate>\n      </member>\n\
+        \      <member>\n        <Path>/</Path>\n        <GroupName>ProdSecurityGroup</GroupName>\n\
+        \        <Arn>arn:aws:iam::jaffa_cakes:group/ProdSecurityGroup</Arn>\n   \
+        \     <GroupId>JAFFACAKES</GroupId>\n        <CreateDate>2015-02-25T12:36:14Z</CreateDate>\n\
+        \      </member>\n      <member>\n        <Path>/</Path>\n        <GroupName>TestSecurityGroup</GroupName>\n\
+        \        <Arn>arn:aws:iam::jaffa_cakes:group/TestSecurityGroup</Arn>\n   \
+        \     <GroupId>JAFFACAKES</GroupId>\n        <CreateDate>2015-02-25T12:36:45Z</CreateDate>\n\
+        \      </member>\n    </Groups>\n  </ListGroupsResult>\n  <ResponseMetadata>\n\
+        \    <RequestId>24b1cef5-a53d-11e7-8a82-47e702eaf8eb</RequestId>\n  </ResponseMetadata>\n\
+        </ListGroupsResponse>\n"}
+    headers:
+      Content-Length: ['1361']
+      Content-Type: [text/xml]
+      Date: ['Fri, 29 Sep 2017 17:39:27 GMT']
+      x-amzn-RequestId: [24b1cef5-a53d-11e7-8a82-47e702eaf8eb]
+    status: {code: 200, message: OK}
+version: 1

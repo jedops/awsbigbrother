@@ -7,3 +7,4 @@ venv*/
 *.egg-info/
 *.pyc
 .tox/
+runtests_prod.sh

@@ -52,6 +52,11 @@ class TestCli(object):
             result = my_runner.invoke(app, ['--certs_max_age', '30'])
             assert "certs_max_age failed for user" in result.output
 
+    def test_expected_policies(self, group_vcr, my_runner):
+        with group_vcr.use_cassette('expected_policies_cli.yml'):
+            result = my_runner.invoke(app, ['--expected_policies', 'thispolicydoesntexist,neitherdoi'])
+            assert "Policy: thispolicydoesntexist" in result.output
+
     def test_config_load_without_policy (self, vcr_test):
         with vcr_test.use_cassette('config_load_test.yml'):
             runner = CliRunner()

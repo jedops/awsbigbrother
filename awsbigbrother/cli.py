@@ -13,6 +13,10 @@ def generate_excluded_users(ctx, param, value):
         value.replace(' ', '')
         report_config.excluded_users.extend(value.split(','))
 
+def generate_expected_policies(ctx, param, value):
+    if value:
+        report_config.expected_policies = value.strip()
+
 
 def parse_config_from_file(ctx, param, value):
     if value:
@@ -39,6 +43,7 @@ def noout_warning(ctx, param, value):
         expose_value=False, default=False,
         help='Check whether each user has Multi-factor auth setup')
 @option('-e', callback=generate_excluded_users, expose_value=False, help='Users to exclude from the reporting')
+@option('--expected_policies', callback=generate_expected_policies, expose_value=False, help='Check each user has a certain policy')
 @option('--access_keys_max_age',
         callback=add_to_options,
         expose_value=False, type=int,

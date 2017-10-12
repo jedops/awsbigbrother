@@ -19,6 +19,7 @@ At present it can be configured to error on the below and display the users who 
 - User has not rotated their access keys in N days.
 - User has not had any activity in N days.
 - User has not rotated their certs in N days.
+- User does not have policy x.
 
 ## Installation:
 
@@ -53,6 +54,11 @@ Show me all users who don't have MFA set and also show me users who have not rot
 Show me all users who don't have MFA set excluding app1user and app2user:
 
 ``` awsbb --mfa -e app1user,app2user ```
+
+Show me all users who don't have the policy "force_mfa" set
+
+``` awsbb --mfa --expected_policies "policy1,policy2" ```
+
 
 
 

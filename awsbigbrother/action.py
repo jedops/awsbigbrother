@@ -75,7 +75,7 @@ class ReportActionRunner(ActionRunner):
                     max_age = self.config.no_activity_max_age
                     if not self.is_older_than_days(attr_last_used, max_age):
                         activity = True
-        return CheckResponse('no_activity_max_age', activity, self.row.user).get_response()
+        return CheckResponse('no_activity_max_age', activity).check_failed_for_user(self.row.user)
 
 
     @classmethod

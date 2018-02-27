@@ -1,7 +1,7 @@
 # AWS Big Brother is always watching!
 
 
-[![Build Status](https://travis-ci.org/jedops/awsbigbrother.svg?branch=master)](https://travis-ci.org/jae2/awsbigbrother)
+[![Build Status](https://travis-ci.org/jedops/awsbigbrother.svg?branch=master)](https://travis-ci.org/jedops/awsbigbrother)
 
 ![Big Brother is always watching!](https://github.com/jedops/awsbigbrother/blob/master/assets/eye-309755_1280.png?raw=true)
 
